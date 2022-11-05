@@ -1,32 +1,27 @@
-import { program } from 'commander';
-import * as t from 'io-ts';
+import { z } from 'zod';
+import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
 
 
-const OptionsCodec = t.type({
-  'config': t.string
+const OptionsCodec = z.object({
+  'config': z.string()
 });
 
-type Options = t.TypeOf<typeof OptionsCodec>;
+type Options = Awaited<ReturnType<typeof setupCli>>;
 
 export let options: Options;
 
-export function setupCli() {
-  program
-    .option('--config', 'path of configuration file', './config.json5');
-
-  program.parse();
-
-  let opts = program.opts();
-  const decoded = OptionsCodec.decode(opts);
-
-  if (decoded._tag === 'Left') {
-    for (let error of decoded.left) {
-      const path = error.context.map(node => node.key).join('/');
-      console.warn(`Invalid option: ${path}: (actual: ${(error.value as any)?.toString()}, expected: ${error.context[error.context.length - 1].type.name})`);
-    }
-    throw new Error('Invalid options! see above warnings for details');
-  }
-  options = opts as Options;
+export async function setupCli() {
+  const cli = await yargs(hideBin(process.argv))
+    .option('config', {
+      alias: 'c',
+      type: 'string',
+      default: "./config.json5",
+      description: 'path of configuration file'
+    })
+    .parse();
+  cli.options = cli;
+  return cli;
 }
 
 

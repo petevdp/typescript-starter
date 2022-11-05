@@ -3,9 +3,9 @@ import { setupEnvironment } from './services/environment';
 import { setupCli } from './services/cli';
 import { config, setupConfig } from './services/config';
 
-export function main() {
+export async function main() {
   setupEnvironment();
-  setupCli();
+  await setupCli();
   setupLogger();
   setupConfig();
 

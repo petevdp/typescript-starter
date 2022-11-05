@@ -7,7 +7,7 @@ import winston, {
 } from 'winston';
 import { MESSAGE } from 'triple-beam';
 import { prettyPrint } from '@base2/pretty-print-object';
-import { Format, format } from 'logform';
+import { format } from 'logform';
 import { environment } from './environment';
 
 type LogCallbackWithMeta<T> = (
