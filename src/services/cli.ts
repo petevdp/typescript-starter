@@ -1,27 +1,20 @@
-import { z } from 'zod';
 import yargs from 'yargs/yargs';
-import { hideBin } from 'yargs/helpers';
 
+export type Cli = Awaited<ReturnType<typeof setupCli>>;
 
-const OptionsCodec = z.object({
-  'config': z.string()
-});
-
-type Options = Awaited<ReturnType<typeof setupCli>>;
-
-export let options: Options;
+export let cli: Cli;
 
 export async function setupCli() {
-  const cli = await yargs(hideBin(process.argv))
+  const _cli = await yargs(process.argv)
     .option('config', {
       alias: 'c',
       type: 'string',
-      default: "./config.json5",
+      default: './config.json5',
       description: 'path of configuration file'
     })
     .parse();
-  cli.options = cli;
-  return cli;
+  cli = _cli;
+  return _cli;
 }
 
 

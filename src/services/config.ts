@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 import JSON5 from 'json5';
-import { options } from './cli';
+import { cli } from './cli';
 import { z } from 'zod';
 
 export const ConfigCodec = z.object({
@@ -12,7 +12,7 @@ export let config: Config;
 
 export function setupConfig() {
   let configRaw: any = {};
-  const textBlob = readFileSync(options.config, 'utf-8');
+  const textBlob = readFileSync(cli.config, 'utf-8');
   if (textBlob) {
     configRaw = { ...JSON5.parse(textBlob) };
   }
